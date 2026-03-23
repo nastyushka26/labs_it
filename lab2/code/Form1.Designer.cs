@@ -40,14 +40,15 @@
             btnDecipher = new Button();
             label4 = new Label();
             rtxtboxKey = new RichTextBox();
+            openFileDialog1 = new OpenFileDialog();
             SuspendLayout();
             // 
             // btnLoadFile
             // 
             btnLoadFile.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            btnLoadFile.Location = new Point(885, 257);
+            btnLoadFile.Location = new Point(1090, 394);
             btnLoadFile.Name = "btnLoadFile";
-            btnLoadFile.Size = new Size(305, 64);
+            btnLoadFile.Size = new Size(305, 75);
             btnLoadFile.TabIndex = 0;
             btnLoadFile.Text = "Выбрать файл";
             btnLoadFile.UseVisualStyleBackColor = true;
@@ -56,9 +57,9 @@
             // rtxtboxPlainText
             // 
             rtxtboxPlainText.Font = new Font("Segoe UI", 14F);
-            rtxtboxPlainText.Location = new Point(52, 257);
+            rtxtboxPlainText.Location = new Point(48, 394);
             rtxtboxPlainText.Name = "rtxtboxPlainText";
-            rtxtboxPlainText.Size = new Size(789, 165);
+            rtxtboxPlainText.Size = new Size(992, 58);
             rtxtboxPlainText.TabIndex = 1;
             rtxtboxPlainText.Text = "";
             // 
@@ -66,7 +67,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label1.Location = new Point(52, 209);
+            label1.Location = new Point(48, 346);
             label1.Name = "label1";
             label1.Size = new Size(254, 45);
             label1.TabIndex = 2;
@@ -76,7 +77,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label2.Location = new Point(52, 450);
+            label2.Location = new Point(48, 188);
             label2.Name = "label2";
             label2.Size = new Size(377, 45);
             label2.TabIndex = 3;
@@ -85,16 +86,16 @@
             // rtxtboxGenerKey
             // 
             rtxtboxGenerKey.Font = new Font("Segoe UI", 14F);
-            rtxtboxGenerKey.Location = new Point(52, 498);
+            rtxtboxGenerKey.Location = new Point(48, 236);
             rtxtboxGenerKey.Name = "rtxtboxGenerKey";
-            rtxtboxGenerKey.Size = new Size(778, 67);
+            rtxtboxGenerKey.Size = new Size(992, 67);
             rtxtboxGenerKey.TabIndex = 4;
             rtxtboxGenerKey.Text = "";
             // 
             // btnKeyEnter
             // 
             btnKeyEnter.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            btnKeyEnter.Location = new Point(885, 104);
+            btnKeyEnter.Location = new Point(1090, 102);
             btnKeyEnter.Name = "btnKeyEnter";
             btnKeyEnter.Size = new Size(305, 64);
             btnKeyEnter.TabIndex = 5;
@@ -106,7 +107,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label3.Location = new Point(52, 605);
+            label3.Location = new Point(48, 486);
             label3.Name = "label3";
             label3.Size = new Size(290, 45);
             label3.TabIndex = 6;
@@ -115,18 +116,18 @@
             // rtxtboxCipherText
             // 
             rtxtboxCipherText.Font = new Font("Segoe UI", 14F);
-            rtxtboxCipherText.Location = new Point(52, 653);
+            rtxtboxCipherText.Location = new Point(48, 544);
             rtxtboxCipherText.Name = "rtxtboxCipherText";
-            rtxtboxCipherText.Size = new Size(778, 130);
+            rtxtboxCipherText.Size = new Size(992, 62);
             rtxtboxCipherText.TabIndex = 7;
             rtxtboxCipherText.Text = "";
             // 
             // btnEncipher
             // 
             btnEncipher.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            btnEncipher.Location = new Point(873, 498);
+            btnEncipher.Location = new Point(394, 802);
             btnEncipher.Name = "btnEncipher";
-            btnEncipher.Size = new Size(305, 66);
+            btnEncipher.Size = new Size(305, 71);
             btnEncipher.TabIndex = 8;
             btnEncipher.Text = "Шифровать";
             btnEncipher.UseVisualStyleBackColor = true;
@@ -135,7 +136,7 @@
             // btnDecipher
             // 
             btnDecipher.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            btnDecipher.Location = new Point(873, 653);
+            btnDecipher.Location = new Point(808, 802);
             btnDecipher.Name = "btnDecipher";
             btnDecipher.Size = new Size(305, 66);
             btnDecipher.TabIndex = 9;
@@ -147,7 +148,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label4.Location = new Point(52, 56);
+            label4.Location = new Point(48, 54);
             label4.Name = "label4";
             label4.Size = new Size(107, 45);
             label4.TabIndex = 10;
@@ -156,18 +157,23 @@
             // rtxtboxKey
             // 
             rtxtboxKey.Font = new Font("Segoe UI", 14F);
-            rtxtboxKey.Location = new Point(52, 104);
+            rtxtboxKey.Location = new Point(48, 102);
             rtxtboxKey.Name = "rtxtboxKey";
-            rtxtboxKey.Size = new Size(789, 64);
+            rtxtboxKey.Size = new Size(992, 50);
             rtxtboxKey.TabIndex = 11;
             rtxtboxKey.Text = "";
+            rtxtboxKey.KeyDown += rtxtboxKey_KeyDown;
+            // 
+            // openFileDialog1
+            // 
+            openFileDialog1.FileName = "openFileDialog1";
             // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LavenderBlush;
-            ClientSize = new Size(1237, 812);
+            ClientSize = new Size(1465, 951);
             Controls.Add(rtxtboxKey);
             Controls.Add(label4);
             Controls.Add(btnDecipher);
@@ -201,5 +207,6 @@
         private Button btnDecipher;
         private Label label4;
         private RichTextBox rtxtboxKey;
+        private OpenFileDialog openFileDialog1;
     }
 }

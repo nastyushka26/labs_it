@@ -14,7 +14,7 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
         public string FileNameOpen, FilePathSaveEncipher = "enciphered.bin", FilePathSaveDecipher = "deciphered.bin";
 
         public byte[] plainTextBytes, generatedKey, cipherText;
-        public byte[] initKey;
+        //public byte[] initKey;
         public int keyStart = 0, registerState = 0;
 
         public const int MAX_KEY_ENTER = 26;
@@ -27,13 +27,19 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             InitializeComponent();
             rtxtboxKey.Enabled = false;
             btnKeyEnter.Enabled = false;
-            initKey = new byte[MAX_KEY_ENTER]; // создали массив для инициализации ключа
+            //initKey = new byte[MAX_KEY_ENTER]; // создали массив для инициализации ключа
             btnEncipher.Enabled = false;
             btnDecipher.Enabled = false;
         }
 
         private void btnLoadFile_Click(object sender, EventArgs e)
         {
+            rtxtboxGenerKey.Text = "";
+            rtxtboxCipherText.Text = "";
+            lblFile.Text = "Текущий файл: ";
+            lblCipher.Text = "Полученное содержание файла";
+            lblResKey.Text = "Сгенерированный ключ";
+            lblPlain.Text = "Исходное содержимое файла";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 // получаем имя файла
@@ -48,6 +54,7 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
                 // тут тоже заменено на вызов метода для отображения данных в двоичном виде
                 //// получили в массиве байты - надо отобразить на интерфейсе
                 rtxtboxPlainText.Text = output_in_binary(plainTextBytes);
+                lblPlain.Text += $" ({plainTextBytes.Length} байт)";
 
                 rtxtboxKey.MaxLength = MAX_KEY_ENTER; // plainTextBytes.Length * 8; // ставим ограничение на ввод количества бит ключа
 
@@ -55,6 +62,7 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
                 btnKeyEnter.Enabled = true;
                 generatedKey = new byte[plainTextBytes.Length]; // сгенерированный будет такой же по длине, что и текст
                 cipherText = new byte[plainTextBytes.Length]; // массив для зашифрованного
+                lblFile.Text += $"\n{FileNameOpen}";
             }
             else
             {
@@ -68,10 +76,10 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
         {
             string binaryData = "";
             string binaryByte = "";
-            // если больше 10 байтов - выводим первые и последние 5 байтов
-            if (data_for_output.Length > 10)
+            // если больше 20 байтов - выводим первые и последние 10 байтов
+            if (data_for_output.Length > 20)
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     // не добавляет лидирующие нули
                     // конвертируем байты массива в эквивалентное строковое двоичное представление
@@ -79,8 +87,8 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
                     binaryData += binaryByte + " ";
                 }
 
-                binaryData += "... ";
-                for (int i = 5; i > 0; i--)
+                binaryData += "\n...\n";
+                for (int i = 10; i > 0; i--)
                 {
                     binaryByte = Convert.ToString(data_for_output[data_for_output.Length - i - 1], 2).PadLeft(8, '0'); 
                     binaryData += binaryByte + " ";
@@ -140,6 +148,8 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             // выводим полученный шифр
             // получили в массиве байты - надо отобразить на интерфейсе
             rtxtboxCipherText.Text = output_in_binary(cipherText);
+            lblResKey.Text += $" ({generatedKey.Length} байт)";
+            lblCipher.Text += $" ({cipherText.Length} байт)";
 
             File.WriteAllBytes(FilePathSaveEncipher, cipherText);
             MessageBox.Show("Файл зашифрован! См. enciphered.bin");
@@ -165,6 +175,8 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             // выводим полученный шифр
             // получили в массиве байты - надо отобразить на интерфейсе
             rtxtboxCipherText.Text = output_in_binary(cipherText);
+            lblResKey.Text += $" ({generatedKey.Length} байт)";
+            lblCipher.Text += $" ({cipherText.Length} байт)";
 
             File.WriteAllBytes(FilePathSaveDecipher, cipherText);
             MessageBox.Show("Файл расшифрован! См. deciphered.bin");
@@ -172,6 +184,8 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
 
         private void btnKeyEnter_Click(object sender, EventArgs e)
         {
+            
+            //lblPlain.Text = "Исходное содержимое файла";
             if (rtxtboxKey.Text.Length > 0)
             {
                 label5.Text = "";
@@ -204,11 +218,6 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
                 btnKeyEnter_Click(sender, e);
                 e.SuppressKeyPress = true; // Чтобы не было "пиканья"
                 return;
-            }
-
-            if (e.KeyCode == Keys.Space)
-            {
-                rtxtboxKey.MaxLength += 1;
             }
 
             if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete ||
@@ -258,6 +267,9 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             rtxtboxKey.Enabled = false;
             btnEncipher.Enabled = false;
             btnDecipher.Enabled = false;
+            lblCipher.Text = "Полученное содержание файла";
+            lblResKey.Text = "Сгенерированный ключ";
+            lblPlain.Text = "Исходное содержимое файла";
         }
     }
 }

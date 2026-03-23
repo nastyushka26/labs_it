@@ -18,7 +18,7 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
         public int keyStart = 0, registerState = 0;
 
         public const int MAX_KEY_ENTER = 26;
-        public const int MASK = 0b1_00000_00000_00000_00110_00001;
+        //public const int MASK = 0b1_00000_00000_00000_00110_00001;
         public const int MASK_STATE = 0b1_11111_11111_11111_11111_11111; //26 единиц для получения только 26 при сдвигах влево
 
 
@@ -73,16 +73,16 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    binaryByte = Convert.ToString(data_for_output[i], 2).PadLeft(8, '0');  // не добавляет лидирующие нули
-                                                                                           // конвертируем байты массива в эквивалентное строковое двоичное представление
+                    // не добавляет лидирующие нули
+                    // конвертируем байты массива в эквивалентное строковое двоичное представление
+                    binaryByte = Convert.ToString(data_for_output[i], 2).PadLeft(8, '0');  
                     binaryData += binaryByte + " ";
                 }
 
                 binaryData += "... ";
                 for (int i = 5; i > 0; i--)
                 {
-                    binaryByte = Convert.ToString(data_for_output[data_for_output.Length - i - 1], 2).PadLeft(8, '0');  // не добавляет лидирующие нули
-                                                                                                                        // конвертируем байты массива в эквивалентное строковое двоичное представление
+                    binaryByte = Convert.ToString(data_for_output[data_for_output.Length - i - 1], 2).PadLeft(8, '0'); 
                     binaryData += binaryByte + " ";
                 }
             }
@@ -90,8 +90,7 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             {
                 for (int i = 0; i < data_for_output.Length; i++)
                 {
-                    binaryByte = Convert.ToString(data_for_output[i], 2).PadLeft(8, '0');  // не добавляет лидирующие нули
-                                                                                           // конвертируем байты массива в эквивалентное строковое двоичное представление
+                    binaryByte = Convert.ToString(data_for_output[i], 2).PadLeft(8, '0'); 
                     binaryData += binaryByte + " ";
                 }
             }
@@ -132,7 +131,6 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             // получили в массиве байты - надо отобразить на интерфейсе
             rtxtboxGenerKey.Text = output_in_binary(generatedKey);
 
-
             // ШИФРУЕМ XOROM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             for (int i = 0; i < generatedKey.Length; i++)
             {
@@ -158,7 +156,7 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             rtxtboxGenerKey.Text = output_in_binary(generatedKey);
 
 
-            // ШИФРУЕМ XOROM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // ДЕШИФРУЕМ XOROM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             for (int i = 0; i < generatedKey.Length; i++)
             {
                 cipherText[i] = (byte)(generatedKey[i] ^ plainTextBytes[i]);
@@ -181,35 +179,14 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
                 rtxtboxKey.Text = (rtxtboxKey.Text).Replace("\r\n", "");
                 if (rtxtboxKey.Text.Length < MAX_KEY_ENTER)
                 {
-                    // лучше дозаполнить нулями
+                    // лучше дозаполнить нулями - заполняется справа нулями
                     while (rtxtboxKey.Text.Length < MAX_KEY_ENTER)
                     {
                         rtxtboxKey.Text += '0';
                     }
                 }
 
-                // ДЛЯ ЗАПОЛНЕНИЯ МАССИВА И ПОТОМ КОНВЕРТАЦИЮ
-                // // идет заполнение байтов массива инициализатора ключа
-                // for (int i = 0; i < rtxtboxKey.TextLength; i++)//i = i + 8)
-                // {
-                //     // получаем текущий байт (его биты)
-                //     string currByte = "";
-                //     //for (int j = 0; j < 8 && j+i<rtxtboxKey.TextLength; j++)
-                //     //{
-                //     //    currByte += rtxtboxKey.Text[i + j];
-                //     //}
-                //     currByte += rtxtboxKey.Text[i]; // берем просто бит 
-
-                //     // занесли байт ключа в массив
-                //     initKey[i] = Convert.ToByte(currByte, 2); // initKey[i / 8] = Convert.ToByte(currByte, 2);
-                // }
-
-                //// массив заполнен -формируем начальное состояние регистра
-                // for (int i = 0; i < MAX_KEY_ENTER; i++)
-                // {
-                //     keyStart = keyStart << 1 | initKey[i];
-                // }
-
+                // получаем просто число - инициализатор ключа
                 keyStart = Convert.ToInt32(rtxtboxKey.Text, 2);
                 btnEncipher.Enabled = true;
                 btnDecipher.Enabled = true;
@@ -241,7 +218,8 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             {
                 if ((e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete) && rtxtboxKey.TextLength <= 26)
                 {
-                    lblEnterLeft.Text = $"Осталось ввести: {26 - rtxtboxKey.TextLength} бит";
+                    if (26 - rtxtboxKey.TextLength + 1<=26)
+                    lblEnterLeft.Text = $"Осталось ввести: {26 - rtxtboxKey.TextLength+1} бит";
                 }
                 // Разрешаем навигационные и редактирующие клавиши
                 return;
@@ -271,6 +249,7 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
 
         private void btnClear_Click(object sender, EventArgs e)
         {
+            lblEnterLeft.Text = "Осталось ввести: 26 бит";
             rtxtboxKey.Clear();
             rtxtboxCipherText.Clear();
             rtxtboxGenerKey.Clear();

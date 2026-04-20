@@ -3,6 +3,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace code                  // полином x^26 + x^8 + x^7 + x + 1
                                 // масочка 1 00000 00000 00000 00110 00001 1
@@ -117,14 +118,18 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
                 // нужно проксорить 26, 8, 7 и 1 бит - (1-ый - он же нулевой, поэтому -1)
                 int xor = 0;
                 xor ^= registerState >> (26 - 1) & 1; // ксор с 26-ым
-                xor ^= registerState >> (8 - 1) & 1;
-                xor ^= registerState >> (7 - 1) & 1;
+                xor ^= registerState >> (8 - 1) & 1;  // с 8-ым
+                xor ^= registerState >> (7 - 1) & 1;  // с 7-ым
                 xor ^= registerState >> (1 - 1) & 1;  // ксор с 1-ым
-                registerState = registerState << 1; // сдвинули на 1 влево
+
+                registerState = registerState << 1;   // сдвинули на 1 влево
+
                 byte bit = (byte)(registerState >> 26 & 1); // получаем старший 27 вытолкнувшийся бит для ключа
+
                 registerState = (registerState & MASK_STATE) | xor; // получаем те же 26 бит + справа бит из ксора
+
                 int celoe = i / 8;  // определяем, какой байт идет
-                generatedKey[celoe] = (byte)(generatedKey[celoe] << 1 | bit);
+                generatedKey[celoe] = (byte)(generatedKey[celoe] << 1 | bit);  // добавляем бит в ключ
             }
         }
 
@@ -142,7 +147,7 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             // ШИФРУЕМ XOROM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             for (int i = 0; i < generatedKey.Length; i++)
             {
-                cipherText[i] = (byte)(generatedKey[i] ^ plainTextBytes[i]);
+                cipherText[i] = (byte)(generatedKey[i] ^ plainTextBytes[i]);  // ксор ключа с исходным текстом
             }
 
             // выводим полученный шифр
@@ -153,6 +158,14 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
 
             File.WriteAllBytes(FilePathSaveEncipher, cipherText);
             MessageBox.Show("Файл зашифрован! См. enciphered.bin");
+
+            try
+            {
+                Process.Start(new ProcessStartInfo(FilePathSaveEncipher) { UseShellExecute = true });
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"Ошибка открытия файла {FilePathSaveEncipher}");
+            }
         }
 
         private void btnDecipher_Click(object sender, EventArgs e)
@@ -180,8 +193,17 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
 
             File.WriteAllBytes(FilePathSaveDecipher, cipherText);
             MessageBox.Show("Файл расшифрован! См. deciphered.bin");
+            try
+            {
+                Process.Start(new ProcessStartInfo(FilePathSaveDecipher) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка открытия файла {FilePathSaveDecipher}");
+            }
         }
 
+        // обработка введенного ключа (инициализатора регистра)
         private void btnKeyEnter_Click(object sender, EventArgs e)
         {
             
@@ -211,6 +233,7 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
             }
         }
 
+        // обработка нажатия клавиш - можно только 1 и 0 на верхней и боковой цифровой клавиатуре
         private void rtxtboxKey_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -259,6 +282,8 @@ namespace code                  // полином x^26 + x^8 + x^7 + x + 1
         private void btnClear_Click(object sender, EventArgs e)
         {
             lblEnterLeft.Text = "Осталось ввести: 26 бит";
+            FileNameOpen = "";
+            lblFile.Text = "Текущий файл: -";
             rtxtboxKey.Clear();
             rtxtboxCipherText.Clear();
             rtxtboxGenerKey.Clear();

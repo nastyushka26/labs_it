@@ -1,0 +1,9 @@
+# Автоматически определять текстовые файлы
+* text=auto
+
+# Явно указать обработку для C# файлов
+*.cs text working-tree-encoding=UTF-8 eol=crlf
+
+# Для файлов форм Windows Forms
+*.designer.cs text working-tree-encoding=UTF-8 eol=crlf
+*.resx text working-tree-encoding=UTF-8 eol=crlf
